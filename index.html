@@ -47,6 +47,15 @@
   .desc{font-size:.95rem;line-height:1.4;opacity:.9;font-family:system-ui,-apple-system,sans-serif}
   .go{margin-top:auto;font-family:system-ui,sans-serif;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#ffe2a8}
   .card::after{content:"🍁";position:absolute;right:-10px;bottom:-14px;font-size:80px;opacity:.13;transform:rotate(-20deg)}
+  .search{display:flex;align-items:center;gap:6px;margin:40px auto 0;max-width:640px;background:#fffaf0;border-radius:999px;padding:6px 8px 6px 20px;box-shadow:0 10px 30px rgba(40,12,0,.5);border:1px solid rgba(255,220,150,.6)}
+  .search input{flex:1;border:0;outline:0;background:transparent;font:16px system-ui,-apple-system,sans-serif;color:#2a1a10;padding:10px 0;min-width:0}
+  .search input::placeholder{color:#8a6a50}
+  .search button{border:0;background:transparent;cursor:pointer;border-radius:999px;color:#5a3315;display:flex;align-items:center;gap:6px;font:500 14px system-ui,sans-serif;padding:8px 10px}
+  .search button:hover{background:#f6e3c4}
+  .search .ai{background:#f3e2c8;padding:8px 14px}
+  .search .mic.on{background:#c2410c;color:#fff;animation:pulse 1s ease-in-out infinite}
+  @keyframes pulse{50%{opacity:.6}}
+  .search svg{width:20px;height:20px}
   footer{text-align:center;margin-top:44px;font-size:.85rem;font-style:italic;color:#ffd99a;text-shadow:0 1px 8px rgba(40,12,0,.9)}
 </style>
 </head>
@@ -81,6 +90,18 @@
       <div class="go">Open ↗</div>
     </a>
   </nav>
+
+  <form class="search" id="search" action="https://www.google.com/search" method="get" target="_blank" role="search">
+    <input id="q" name="q" type="search" placeholder="Ask Google" autocomplete="off" aria-label="Search Google">
+    <input id="udm" type="hidden" name="udm" value="" disabled>
+    <button type="button" class="mic" id="mic" title="Search by voice" aria-label="Search by voice">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
+    </button>
+    <button type="submit" title="Search" aria-label="Search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg>
+    </button>
+    <button type="button" class="ai" id="ai" title="Search in AI Mode">✦ AI Mode</button>
+  </form>
 
 </main>
 
