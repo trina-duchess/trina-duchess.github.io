@@ -152,9 +152,9 @@
   shade("gDark","#3a1a0c","#0e0604");
 
   // dome canopy: rounded top, softly curved base, scalloped rim of leaf clusters
-  function dome(x,y,w,h,base,tex,op){
+  function dome(x,y,w,h,base,tex,op,flat){
     const g=el("g",{opacity:op});
-    const d=`M${x-w},${y} C${x-w},${y-h*1.33} ${x+w},${y-h*1.33} ${x+w},${y} Q${x},${y+h*0.22} ${x-w},${y}Z`;
+    const d=`M${x-w},${y} C${x-w},${y-h*1.33} ${x+w},${y-h*1.33} ${x+w},${y} Q${x},${flat?y:y+h*0.22} ${x-w},${y}Z`;
     el("path",{d,fill:`url(#${base})`},g);
     const n=Math.max(7,Math.round(w/14));
     for(let i=0;i<=n;i++){
@@ -218,10 +218,10 @@
   el("path",{d:path,fill:"url(#gPath)"});
   el("path",{d:path,fill:"url(#stPath)",opacity:.5});
   // front layer: dark silhouette domes and pale bare trees
-  dome(250,860,210,190,"gDark","stDark",1);
-  dome(1360,865,220,200,"gDark","stDark",1);
-  trunk(250,GROUND,850,18,"#0e0604",1);
-  trunk(1360,GROUND,850,18,"#0e0604",1);
+  dome(250,872,210,190,"gDark","stDark",1,true);
+  dome(1360,872,220,200,"gDark","stDark",1,true);
+  
+  
   bare(560,GROUND,120,Math.PI/2,5,8,"#fbe7c0");
   bare(1050,GROUND,105,Math.PI/2+0.05,5,7,"#fbe7c0");
   bare(40,GROUND,90,Math.PI/2-0.05,4,6,"#fbe7c0");
