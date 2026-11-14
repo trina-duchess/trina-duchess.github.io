@@ -82,7 +82,6 @@
     </a>
   </nav>
 
-  <footer>Each card opens in a new tab.</footer>
 </main>
 
 <script>
@@ -124,6 +123,7 @@
     const n=Math.max(7,Math.round(w/14));
     for(let i=0;i<=n;i++){
       const a=Math.PI*i/n, rr=w*(0.1+r()*0.06);
+      if(Math.sin(a)<0.45) continue;
       el("circle",{cx:x-Math.cos(a)*w*0.92,cy:y-Math.sin(a)*h*0.95+rr*0.4,r:rr,fill:`url(#${base})`},g);
     }
     // inner cluster domes
