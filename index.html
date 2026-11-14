@@ -213,6 +213,45 @@
   // soft veil so the cards stay easy to read
   el("rect",{x:0,y:0,width:1600,height:1000,fill:"#2a1206",opacity:.18});
 })();
+(function(){
+  const form=document.getElementById("search"), q=document.getElementById("q"), udm=document.getElementById("udm");
+  function go(ai){
+    if(!q.value.trim()){q.focus();return;}
+    udm.disabled=!ai; udm.value=ai?"50":"";
+    form.submit(); udm.disabled=true;
+  }
+  form.addEventListener("submit",e=>{e.preventDefault();go(false);});
+  document.getElementById("ai").addEventListener("click",()=>go(true));
+  const mic=document.getElementById("mic");
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const say=t=>{q.value="";q.placeholder=t;};
+  if(!SR){mic.addEventListener("click",()=>say("Voice search needs Chrome or Edge"));return;}
+  let rec=null;
+  const reset=()=>{mic.classList.remove("on");rec=null;};
+  mic.addEventListener("click",async()=>{
+    if(rec){rec.stop();return;}
+    mic.classList.add("on"); say("Starting microphone…");
+    try{
+      const s=await navigator.mediaDevices.getUserMedia({audio:true});
+      s.getTracks().forEach(t=>t.stop());
+    }catch(e){reset();say("Microphone blocked — click the icon left of the address to allow it");return;}
+    rec=new SR(); rec.lang="en-US"; rec.interimResults=true;
+    rec.onstart=()=>say("Listening… speak now");
+    rec.onresult=e=>{
+      q.value=Array.from(e.results).map(r=>r[0].transcript).join("");
+      if(e.results[e.results.length-1].isFinal){rec.stop();go(false);}
+    };
+    rec.onerror=e=>{
+      const m={"not-allowed":"Microphone blocked — click the icon left of the address to allow it",
+               "no-speech":"Didn't hear anything — click the mic and try again",
+               "network":"Voice needs an internet connection — try again",
+               "audio-capture":"No microphone found"};
+      say(m[e.error]||("Voice error: "+e.error));
+    };
+    rec.onend=()=>{const was=q.placeholder; reset(); if(!q.value&&was.startsWith("Listening"))q.placeholder="Ask Google";};
+    try{rec.start();}catch(e){reset();say("Voice error — try again");}
+  });
+})();
   const leaves=["🍁","🍂","🍁","🍂","🍃"];
   for(let i=0;i<14;i++){
     const l=document.createElement("div");
