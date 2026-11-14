@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trina's Home</title>
+<style>
+  :root{
+    --bark:#2a1a10; --bark2:#3b2414; --amber:#f5a623; --gold:#ffcf4a;
+    --orange:#e8681c; --red:#b8261b; --cream:#fff4dc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    min-height:100vh; font-family:Georgia,"Times New Roman",serif; color:var(--cream);
+    background:
+      radial-gradient(ellipse 60% 45% at 50% 12%, rgba(255,214,110,.75), rgba(245,166,35,.25) 45%, transparent 70%),
+      linear-gradient(180deg,#5a3315 0%,#8a3f12 35%,#a8480f 55%,#6e2a0c 80%,#2a1a10 100%);
+    background-attachment:fixed; overflow-x:hidden;
+  }
+  /* stylized forest */
+  #forest{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+  /* falling leaves */
+  .leaf{position:fixed;top:-40px;font-size:22px;pointer-events:none;z-index:1;animation:fall linear infinite;opacity:.85}
+  @keyframes fall{
+    0%{transform:translate(0,-40px) rotate(0)}
+    50%{transform:translate(40px,50vh) rotate(180deg)}
+    100%{transform:translate(-20px,105vh) rotate(360deg)}
+  }
+  @media (prefers-reduced-motion:reduce){.leaf{display:none}}
+  main{position:relative;z-index:2;max-width:960px;margin:0 auto;padding:56px 22px 40px}
+  header{text-align:center;margin-bottom:40px}
+  h1{font-size:clamp(2.2rem,6vw,3.4rem);font-weight:normal;letter-spacing:.02em;text-shadow:0 2px 18px rgba(60,20,0,.6)}
+  .sub{margin-top:8px;font-style:italic;color:#ffe2a8;text-shadow:0 1px 8px rgba(40,12,0,.9)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:20px}
+  a.card{
+    display:flex;flex-direction:column;gap:10px;text-decoration:none;color:var(--cream);
+    padding:24px 22px;border-radius:16px;min-height:170px;position:relative;overflow:hidden;
+    background:linear-gradient(155deg,rgba(255,255,255,.14),rgba(255,255,255,.04)),var(--c);
+    border:1px solid rgba(255,220,150,.35);
+    box-shadow:0 10px 30px rgba(40,12,0,.45);
+    transition:transform .2s ease,box-shadow .2s ease;
+  }
+  a.card:hover,a.card:focus-visible{transform:translateY(-5px) rotate(-.5deg);box-shadow:0 16px 38px rgba(40,12,0,.6);outline:none}
+  a.card:focus-visible{border-color:var(--gold)}
+  .icon{font-size:2rem}
+  .name{font-size:1.35rem}
+  .desc{font-size:.95rem;line-height:1.4;opacity:.9;font-family:system-ui,-apple-system,sans-serif}
+  .go{margin-top:auto;font-family:system-ui,sans-serif;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:#ffe2a8}
+  .card::after{content:"🍁";position:absolute;right:-10px;bottom:-14px;font-size:80px;opacity:.13;transform:rotate(-20deg)}
+  footer{text-align:center;margin-top:44px;font-size:.85rem;font-style:italic;color:#ffd99a;text-shadow:0 1px 8px rgba(40,12,0,.9)}
+</style>
+</head>
+<body>
+<svg id="forest" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
+
+<main>
+  <header>
+    <h1>Welcome home, Trina</h1>
+    <p class="sub">Pick a path through the woods</p>
+  </header>
+
+  <nav class="grid">
+    <a class="card" style="--c:#c2410c" href="https://trina-duchess.github.io/the-hours/" target="_blank" rel="noopener noreferrer">
+      <div class="icon">⏳</div><div class="name">The Hours</div>
+      <div class="desc">Budget your week's time around your life goals.</div>
+      <div class="go">Open ↗</div>
+    </a>
+    <a class="card" style="--c:#b7791f" href="https://trina-duchess.github.io/full-measure/" target="_blank" rel="noopener noreferrer">
+      <div class="icon">🥗</div><div class="name">Full Measure</div>
+      <div class="desc">Log foods and see nutrients against your targets.</div>
+      <div class="go">Open ↗</div>
+    </a>
+    <a class="card" style="--c:#7c2d12" href="https://trina-duchess.github.io/steady-strength/" target="_blank" rel="noopener noreferrer">
+      <div class="icon">💪</div><div class="name">Steady Strength</div>
+      <div class="desc">Your workout schedule and home routine.</div>
+      <div class="go">Open ↗</div>
+    </a>
+    <a class="card" style="--c:#9a1b14" href="https://trina-duchess.github.io/bears-cards/" target="_blank" rel="noopener noreferrer">
+      <div class="icon">🐻</div><div class="name">Chicago Bears</div>
+      <div class="desc">Roster flashcards, schedule and live scores.</div>
+      <div class="go">Open ↗</div>
+    </a>
+  </nav>
+
+  <footer>Each card opens in a new tab.</footer>
+</main>
+
+<script>
+(function(){
+  const NS="http://www.w3.org/2000/svg", svg=document.getElementById("forest");
+  let s=11; const r=()=>((s=(s*9301+49297)%233280)/233280);
+  const el=(t,a,p=svg)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p.appendChild(e);return e;};
+  const defs=el("defs",{});
+
+  // stipple textures: tiny leaf dots in a lighter tone
+  function stipple(id,c1,c2,size){
+    const S=size*4;
+    const p=el("pattern",{id,width:S,height:S,patternUnits:"userSpaceOnUse",patternTransform:`rotate(${(r()*40-20).toFixed(0)})`},defs);
+    for(let i=0;i<70;i++){
+      el("circle",{cx:(r()*S).toFixed(1),cy:(r()*S).toFixed(1),r:(0.6+r()*1.6).toFixed(1),fill:i%3?c1:c2,opacity:(0.4+r()*0.6).toFixed(2)},p);
+    }
+  }
+  stipple("stFar","#f6c46a","#ffe1a0",14);
+  stipple("stMid","#ffb347","#ffd27a",12);
+  stipple("stRed","#ff7a3d","#ffc06a",11);
+  stipple("stDark","#e0641e","#a63a12",10);
+
+  // light-from-above shading for domes
+  function shade(id,top,bottom){
+    const g=el("radialGradient",{id,cx:"50%",cy:"15%",r:"85%"},defs);
+    el("stop",{offset:"0%","stop-color":top},g);
+    el("stop",{offset:"100%","stop-color":bottom},g);
+  }
+  shade("gFar","#e89a48","#8a3c14");
+  shade("gMid","#e8701e","#4e1c0a");
+  shade("gRed","#c8381a","#300e06");
+  shade("gDark","#3a1a0c","#0e0604");
+
+  // dome canopy: rounded top, softly curved base, scalloped rim of leaf clusters
+  function dome(x,y,w,h,base,tex,op){
+    const g=el("g",{opacity:op});
+    const d=`M${x-w},${y} C${x-w},${y-h*1.33} ${x+w},${y-h*1.33} ${x+w},${y} Q${x},${y+h*0.22} ${x-w},${y}Z`;
+    el("path",{d,fill:`url(#${base})`},g);
+    const n=Math.max(7,Math.round(w/14));
+    for(let i=0;i<=n;i++){
+      const a=Math.PI*i/n, rr=w*(0.1+r()*0.06);
+      el("circle",{cx:x-Math.cos(a)*w*0.92,cy:y-Math.sin(a)*h*0.95+rr*0.4,r:rr,fill:`url(#${base})`},g);
+    }
+    // inner cluster domes
+    for(let i=0;i<3;i++){
+      const cx=x+(r()-0.5)*w*0.9, cy=y-h*(0.25+r()*0.4), cw=w*(0.28+r()*0.15);
+      el("path",{d:`M${cx-cw},${cy} C${cx-cw},${cy-cw*1.1} ${cx+cw},${cy-cw*1.1} ${cx+cw},${cy}Z`,fill:`url(#${base})`,opacity:.9},g);
+    }
+    el("path",{d,fill:`url(#${tex})`,opacity:base==="gDark"?.4:.7},g);
+    return g;
+  }
+  function trunk(x,y1,y2,wd,color,op){
+    el("rect",{x:x-wd/2,y:y2,width:wd,height:y1-y2,fill:color,opacity:op});
+  }
+  // bare fan-branched tree
+  function bare(x,y,len,ang,depth,wd,color){
+    const x2=x+Math.cos(ang)*len, y2=y-Math.sin(ang)*len;
+    el("line",{x1:x,y1:y,x2,y2,stroke:color,"stroke-width":wd,"stroke-linecap":"round"});
+    if(depth<=0)return;
+    const k=depth>3?2:3;
+    for(let i=0;i<k;i++){
+      const spread=0.5+r()*0.35, na=ang+(i-(k-1)/2)*spread+(r()-0.5)*0.2;
+      bare(x2,y2,len*(0.68+r()*0.12),na,depth-1,wd*0.62,color);
+    }
+  }
+
+  const GROUND=880;
+  // back layer: tall narrow pale domes with thin trunks
+  for(let i=0;i<11;i++){
+    const x=40+i*150+(r()-0.5)*60, h=140+r()*90, w=55+r()*35, y=300+r()*180;
+    trunk(x,GROUND,y,4,"#f3d9a8",.35);
+    dome(x,y,w,h,"gFar","stFar",.5);
+  }
+  // middle layer: big rust domes
+  const mids=[[180,640,190,200],[520,600,230,240],[1080,610,240,250],[1420,650,200,210],[820,700,170,170]];
+  mids.forEach(([x,y,w,h],i)=>dome(x,y,w,h,i%2?"gRed":"gMid",i%2?"stRed":"stMid",.95));
+  // tall pale trunks piercing through
+  [90,330,700,960,1240,1520,1330,440].forEach(x=>{
+    const top=40+r()*160;
+    trunk(x,GROUND,top,5+r()*4,"#fbe7c0",.85);
+    bare(x,top+40,40,Math.PI/2,3,3,"#fbe7c0");
+  });
+  // ground band with perspective lines
+  // ground: earthy band with leaf-litter speckle
+  const gg=el("linearGradient",{id:"gGround",x1:0,y1:0,x2:0,y2:1},defs);
+  el("stop",{offset:"0%","stop-color":"#4a1e0a"},gg);
+  el("stop",{offset:"100%","stop-color":"#1a0904"},gg);
+  const pg=el("linearGradient",{id:"gPath",x1:0,y1:0,x2:0,y2:1},defs);
+  el("stop",{offset:"0%","stop-color":"#e0a056"},pg);
+  el("stop",{offset:"100%","stop-color":"#8a4a1c"},pg);
+  stipple("stGround","#c2541a","#7a2e0e",12);
+  stipple("stPath","#f2c27a","#6e3412",10);
+  el("rect",{x:0,y:GROUND-12,width:1600,height:132,fill:"url(#gGround)"});
+  el("rect",{x:0,y:GROUND-12,width:1600,height:132,fill:"url(#stGround)",opacity:.6});
+  // winding path from the horizon to the bottom center
+  const path=`M792,${GROUND-12} C784,${GROUND+20} 760,${GROUND+50} 700,1000 L900,1000 C840,${GROUND+50} 816,${GROUND+20} 808,${GROUND-12}Z`;
+  el("path",{d:path,fill:"url(#gPath)"});
+  el("path",{d:path,fill:"url(#stPath)",opacity:.5});
+  // front layer: dark silhouette domes and pale bare trees
+  dome(250,860,210,190,"gDark","stDark",1);
+  dome(1360,865,220,200,"gDark","stDark",1);
+  trunk(250,GROUND,850,18,"#0e0604",1);
+  trunk(1360,GROUND,850,18,"#0e0604",1);
+  bare(560,GROUND,120,Math.PI/2,5,8,"#fbe7c0");
+  bare(1050,GROUND,105,Math.PI/2+0.05,5,7,"#fbe7c0");
+  bare(40,GROUND,90,Math.PI/2-0.05,4,6,"#fbe7c0");
+  // soft veil so the cards stay easy to read
+  el("rect",{x:0,y:0,width:1600,height:1000,fill:"#2a1206",opacity:.18});
+})();
+  const leaves=["🍁","🍂","🍁","🍂","🍃"];
+  for(let i=0;i<14;i++){
+    const l=document.createElement("div");
+    l.className="leaf"; l.textContent=leaves[i%leaves.length];
+    l.style.left=Math.random()*100+"vw";
+    l.style.fontSize=(16+Math.random()*16)+"px";
+    l.style.animationDuration=(9+Math.random()*10)+"s";
+    l.style.animationDelay=(-Math.random()*18)+"s";
+    document.body.appendChild(l);
+  }
+</script>
+</body>
+</html>
